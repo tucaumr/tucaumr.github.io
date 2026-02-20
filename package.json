@@ -3,18 +3,27 @@
   "version": "1.0.0",
   "main": "index.html",
   "scripts": {
+    "build:html": "posthtml src/index.template.html -o index.html",
     "build:css": "sass --quiet-deps style/main.scss style/main.css",
+    "build": "yarn build:html && yarn build:css",
+    "build:netlify": "yarn build",
+    "watch:html": "chokidar \"src/**/*.html\" -c \"yarn build:html\"",
     "watch:css": "sass --quiet-deps --watch style/main.scss:style/main.css",
-    "serve": "node ./node_modules/live-server/live-server.js --port=5500 --open=index.html",
-    "dev": "yarn build:css && concurrently \"yarn watch:css\" \"yarn serve\""
+    "serve": "PORT=${PORT:-5500}; while lsof -i :$PORT -sTCP:LISTEN -t >/dev/null; do PORT=$((PORT+1)); done; echo \"Servidor em http://localhost:$PORT\"; python3 -m http.server $PORT",
+    "dev": "yarn build && concurrently \"yarn watch:html\" \"yarn watch:css\" \"yarn serve\""
   },
   "repository": "https://github.com/tucaumr/tucaumr.github.io",
   "author": "Arthur Candido Regueira de Miranda <arthur.regueira@aol.com>",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "bootstrap": "^5.3.8",
     "concurrently": "^9.2.1",
-    "live-server": "^1.2.2",
+    "posthtml-cli": "^0.10.0",
+    "posthtml-include": "^2.0.1",
     "sass": "^1.97.3"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0"
   }
 }

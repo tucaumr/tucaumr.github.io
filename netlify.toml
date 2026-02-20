@@ -1,0 +1,6 @@
+[build]
+  command = "yarn build:netlify"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
